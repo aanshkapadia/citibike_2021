@@ -1,0 +1,5 @@
+# Environments
+.venv
+
+# MacOS
+.DS_Store
