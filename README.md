@@ -2,7 +2,7 @@
 
 ##  Overview
 `In this project, I explored 2021 CitiBike ride data and calculated summary statistics in regards to age, gender, and user type (subscriber or non-subscriber). I conducted my analysis by importing the dataset into a local PostgreSQL database and then using SQL to perform aggregrate functions.` </br></br>
-`* Note: the dataset only reflects rides in 2021 from specific months (Jan, Feb, March, April) as CitiBike stopped providing birth year and gender shortly afterwards.`
+`* Note: the dataset only reflects rides in 2021 from specific months (Jan, Feb, March, April) as CitiBike stopped providing data on birth year and gender.`
 
 ##  Data
 View CitiBike [dataset](https://www.kaggle.com/datasets/vineethakkinapalli/citibike-bike-sharingnewyork-cityjan-to-apr-2021)
@@ -177,10 +177,12 @@ ORDER BY avg_distance DESC;
 -- Create column with string version of gender
 ALTER TABLE rides_temp ADD gender_str text;
 UPDATE rides_temp	
-	SET	gender_str = (CASE 
-					  WHEN gender_num = 1 THEN 'Male'
-				  	  WHEN gender_num = 2 THEN 'Female'
-				  	  ELSE 'Unknown' END);
+SET gender_str =
+	CASE 
+		WHEN gender_num = 1 THEN 'Male'
+		WHEN gender_num = 2 THEN 'Female'
+		ELSE 'Unknown' 
+	END;
 ````
 
 ````sql
@@ -197,8 +199,8 @@ GROUP BY gender_str
 ORDER BY avg_distance DESC;
 ````
 <img src="images/query-6.png" width=""><br/>
-- `'Male'` and `Female` riders <u>both</u> averaged 0.67 miles/ride 
-- Riders of `'Unknown'` gender averaged 0.75 miles/ride 
+- `'Male'` and `Female` riders <u>both</u> averaged 0.67 miles per ride 
+- Riders of `'Unknown'` gender averaged 0.75 miles per ride 
 <br/><br/>
 
 ##  5.0 Create Age Buckets / Bins
@@ -206,15 +208,16 @@ ORDER BY avg_distance DESC;
 -- Create age buckets for each decade (starting from min age: 18)
 ALTER TABLE rides_temp ADD age_bucket text;
 UPDATE rides_temp 
-	SET age_bucket = 
-		 CASE 
-		 	WHEN age >= 10 AND age < 20 THEN'[18-20)'
-		  	WHEN age >= 20 AND age < 30 THEN'[20-30)'
-			WHEN age >= 30 AND age < 40 THEN'[30-40)' 
-			WHEN age >= 40 AND age < 50 THEN'[40-50)' 
-			WHEN age >= 50 AND age < 60 THEN'[50-60)' 
-			WHEN age >= 60 AND age < 70 THEN'[60-70)' 
-			WHEN age >= 70 AND age < 80 THEN'[70-80)' END;
+SET age_bucket =
+	CASE 
+		WHEN age >= 10 AND age < 20 THEN'[18-20)'
+		WHEN age >= 20 AND age < 30 THEN'[20-30)'
+		WHEN age >= 30 AND age < 40 THEN'[30-40)' 
+		WHEN age >= 40 AND age < 50 THEN'[40-50)' 
+		WHEN age >= 50 AND age < 60 THEN'[50-60)' 
+		WHEN age >= 60 AND age < 70 THEN'[60-70)' 
+		WHEN age >= 70 AND age < 80 THEN'[70-80)' 
+	END;
 ````
 <br/>
 
